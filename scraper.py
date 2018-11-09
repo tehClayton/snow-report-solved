@@ -20,7 +20,11 @@ def scrape_page():
 	# wait for dynamic elements to load
 	time.sleep(4)
 	# page uses lazy loading, so force a scroll action to load more resorts
-	browser.execute_script("window.scrollTo(0, 10000);")
+	browser.execute_script("window.scrollTo(0, 500);")
+	# wait for page to load
+	time.sleep(4)
+	# page uses lazy loading, so force a scroll action to load more resorts
+	browser.execute_script("window.scrollTo(0, 500);")
 	# wait for page to load
 	time.sleep(4)
 
@@ -56,16 +60,28 @@ def scrape_page():
 			# new snow
 			if 'nsnow' in cell['class']:
 				inches = cell.find_all('b')
-				inches_24_hr = inches[0].text
-				inches_72_hr = inches[1].text
+				inches_24_hr = int(inches[0].text.replace('"', ''))
+				inches_72_hr = int(inches[1].text.replace('"', ''))
 			# open lifts
 			if 'open_lifts' in cell['class']:
-				open_lifts = cell.text
+				open_lifts_str = cell.text.replace(' ', '')
+				if open_lifts_str[0] == '/':
+					open_lifts_str = f'0{open_lifts_str}'
+				open_lifts_list = open_lifts_str.split('/')
+				open_num = int(open_lifts_list[0])
+				total_num = int(open_lifts_list[1])
+				open_lifts = open_num / total_num
 			# open trails
 			if 'trails' in cell['class']:
-				open_trails = cell.text
+				open_trails_str = cell.text.replace(' ', '')
+				if open_trails_str[0] == '/':
+					open_trails_str = f'0{open_trails_str}'
+				open_trails_list = open_trails_str.split('/')
+				open_num = int(open_trails_list[0])
+				total_num = int(open_trails_list[1])
+				open_trails = open_num / total_num
 		resorts[resort_name] = {
-								'open': open_status, 
+								'open_status': open_status, 
 								'inches_24_hr': inches_24_hr, 
 								'inches_72_hr': inches_72_hr,
 								'open_lifts': open_lifts,
