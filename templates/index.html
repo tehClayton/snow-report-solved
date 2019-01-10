@@ -15,6 +15,7 @@
       <h1>Where to ski today</h1>
       <p><a class="btn btn-primary btn-lg" href="/scrape" role="button">Retrieve Snow Report</a></p>
     </div>
+    {% if resort %}
     <h2>You should go to:</h2>
     <h1>
         {{resort.resort_name}}
@@ -26,6 +27,7 @@
       <li> {{'%.1f'|format(resort.open_trails_pct*100)}}% of their trails are open</li>
       <li> Last updated: {{resort.scrape_timestamp}}</li>
     </ul>
+    {% endif %}
   </div>
   </div>
 </body>
